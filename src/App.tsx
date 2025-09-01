@@ -17,8 +17,12 @@ const App: React.FC = () => {
     bindingDirection: 'left',
     gridColor: '#cccccc',
     gridSize: 5,
+    gridThickness: 1,
+    gridStyle: 'solid',
     lineColor: '#cccccc',
     lineSpacing: 7,
+    lineThickness: 1,
+    lineStyle: 'solid',
     calendar: {
       year: new Date().getFullYear(),
       showYearly: false,
@@ -93,20 +97,40 @@ const App: React.FC = () => {
             // ページタイプに応じたスタイルを適用
             if (config.pageType === 'grid') {
               const gridSize = config.gridSize * 3.59
-              contentDiv.style.backgroundImage = `
-                linear-gradient(${config.gridColor} 1px, transparent 1px),
-                linear-gradient(90deg, ${config.gridColor} 1px, transparent 1px)
-              `
+              // SVGパターンで方眼の線種を表現
+              const strokeDashArray = config.gridStyle === 'dashed' ? '5,3' : config.gridStyle === 'dotted' ? '2,2' : 'none'
+              const svgPattern = `data:image/svg+xml,${encodeURIComponent(`
+                <svg width="${gridSize}" height="${gridSize}" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <pattern id="grid" width="${gridSize}" height="${gridSize}" patternUnits="userSpaceOnUse">
+                      <path d="M ${gridSize} 0 L 0 0 0 ${gridSize}" 
+                            fill="none" 
+                            stroke="${config.gridColor}" 
+                            stroke-width="${config.gridThickness}"
+                            stroke-dasharray="${strokeDashArray}"/>
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#grid)" />
+                </svg>
+              `)}`
+              contentDiv.style.backgroundImage = `url("${svgPattern}")`
               contentDiv.style.backgroundSize = `${gridSize}px ${gridSize}px`
             } else if (config.pageType === 'ruled') {
               const lineSpacing = config.lineSpacing * 3.59
-              contentDiv.style.backgroundImage = `repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent ${lineSpacing - 1}px,
-                ${config.lineColor} ${lineSpacing - 1}px,
-                ${config.lineColor} ${lineSpacing}px
-              )`
+              // SVGパターンで罫線の線種を表現
+              const strokeDashArray = config.lineStyle === 'dashed' ? '8,4' : config.lineStyle === 'dotted' ? '2,3' : 'none'
+              const svgPattern = `data:image/svg+xml,${encodeURIComponent(`
+                <svg width="100%" height="${lineSpacing}" xmlns="http://www.w3.org/2000/svg">
+                  <line x1="0" y1="${lineSpacing}" x2="100%" y2="${lineSpacing}" 
+                        stroke="${config.lineColor}" 
+                        stroke-width="${config.lineThickness}"
+                        stroke-dasharray="${strokeDashArray}"/>
+                </svg>
+              `)}`
+              contentDiv.style.backgroundImage = `url("${svgPattern}")`
+              contentDiv.style.backgroundRepeat = 'repeat-y'
+              contentDiv.style.backgroundSize = `100% ${lineSpacing}px`
+              contentDiv.style.paddingTop = '40px'
             }
             
             pageDiv.appendChild(contentDiv)
