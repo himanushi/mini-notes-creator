@@ -1,5 +1,6 @@
 export type PageType = 'blank' | 'grid' | 'ruled'
 export type BindingDirection = 'left' | 'right'
+export type LineStyle = 'solid' | 'dashed' | 'dotted'
 
 export interface NotebookConfig {
   pageType: PageType
@@ -10,8 +11,12 @@ export interface NotebookConfig {
   bindingDirection: BindingDirection
   gridColor: string
   gridSize: number
+  gridThickness: number
+  gridStyle: LineStyle
   lineColor: string
   lineSpacing: number
+  lineThickness: number
+  lineStyle: LineStyle
   calendar: {
     year: number
     showYearly: boolean
