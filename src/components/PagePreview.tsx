@@ -6,7 +6,10 @@ interface Props {
 }
 
 const PagePreview: React.FC<Props> = ({ config }) => {
-  const mmToPx = (mm: number) => mm * 3.7795275591
+  // A4用紙での実際のA6サイズに合わせた変換率
+  // A6: 105mm × 148mm
+  // 画面表示用A6: 356px × 503px
+  const mmToPx = (mm: number) => mm * (356 / 105) // 約3.39
   
   const renderPage = (pageNumber: number) => {
     const isEvenPage = pageNumber % 2 === 0
@@ -28,7 +31,8 @@ const PagePreview: React.FC<Props> = ({ config }) => {
                 linear-gradient(90deg, ${config.gridColor} 1px, transparent 1px)
               `,
               backgroundSize: `${gridSizePx}px ${gridSizePx}px`,
-            }}
+              '--grid-size-mm': `${config.gridSize}mm`,
+            } as React.CSSProperties}
           ></div>
         )
       }
@@ -46,7 +50,9 @@ const PagePreview: React.FC<Props> = ({ config }) => {
                 ${config.lineColor} ${lineSpacingPx - 1}px,
                 ${config.lineColor} ${lineSpacingPx}px
               )`,
-            }}
+              '--line-spacing-mm': `${config.lineSpacing}mm`,
+              '--line-color': config.lineColor,
+            } as React.CSSProperties}
           ></div>
         )
       }
