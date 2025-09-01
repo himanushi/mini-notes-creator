@@ -1,5 +1,5 @@
 import React from 'react'
-import { NotebookConfig, PageType } from '../types'
+import { NotebookConfig, PageType, BindingDirection } from '../types'
 
 interface Props {
   config: NotebookConfig
@@ -75,6 +75,30 @@ const NotebookSettings: React.FC<Props> = ({ config, setConfig }) => {
             onChange={(e) => handlePageCountChange(Number(e.target.value))}
           />
         </label>
+      </div>
+
+      <div className="setting-group">
+        <label>綴じ方向:</label>
+        <div className="radio-group">
+          <label>
+            <input
+              type="radio"
+              value="left"
+              checked={config.bindingDirection === 'left'}
+              onChange={() => setConfig(prev => ({ ...prev, bindingDirection: 'left' }))}
+            />
+            左綴じ（横書き用）
+          </label>
+          <label>
+            <input
+              type="radio"
+              value="right"
+              checked={config.bindingDirection === 'right'}
+              onChange={() => setConfig(prev => ({ ...prev, bindingDirection: 'right' }))}
+            />
+            右綴じ（縦書き用）
+          </label>
+        </div>
       </div>
 
       <div className="setting-group">

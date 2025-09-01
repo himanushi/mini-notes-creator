@@ -14,6 +14,7 @@ const App: React.FC = () => {
     showPageNumbers: true,
     showIndex: true,
     showCover: true,
+    bindingDirection: 'left',
     gridColor: '#cccccc',
     gridSize: 5,
     lineColor: '#cccccc',
@@ -120,12 +121,21 @@ const App: React.FC = () => {
               pageNumberDiv.style.color = '#666'
               pageNumberDiv.style.fontFamily = 'sans-serif'
               
-              // ページ番号の位置を決定（印刷レイアウトに基づく）
-              // 左側のページ（偶数ページ）は左下、右側のページ（奇数ページ）は右下
-              if (pageNum % 2 === 0) {
-                pageNumberDiv.style.left = '10px'
+              // ページ番号の位置を決定（綴じ方向に基づく）
+              if (config.bindingDirection === 'left') {
+                // 左綴じ: 偶数ページは左下、奇数ページは右下
+                if (pageNum % 2 === 0) {
+                  pageNumberDiv.style.left = '10px'
+                } else {
+                  pageNumberDiv.style.right = '10px'
+                }
               } else {
-                pageNumberDiv.style.right = '10px'
+                // 右綴じ: 偶数ページは右下、奇数ページは左下
+                if (pageNum % 2 === 0) {
+                  pageNumberDiv.style.right = '10px'
+                } else {
+                  pageNumberDiv.style.left = '10px'
+                }
               }
               
               pageDiv.appendChild(pageNumberDiv)
@@ -175,29 +185,53 @@ const App: React.FC = () => {
     const sheetsNeeded = Math.ceil(totalPages / 4)
     const baseIndex = (sheetNumber - 1) * 4
     
-    // シンプルなページ配置: A4の1枚目は1,60,2,59など
-    if (sheetNumber === 1) {
+    if (config.bindingDirection === 'left') {
+      // 左綴じの場合
+      if (sheetNumber === 1) {
+        return [
+          totalPages,          // 左上: 最終ページ (例: 60)
+          1,                   // 右上: 1ページ目
+          2,                   // 左下: 2ページ目
+          totalPages - 1 > 1 ? totalPages - 1 : 0  // 右下: 最終-1ページ (例: 59)
+        ]
+      }
+      
+      // 2枚目以降の計算
+      const leftTop = totalPages - (sheetNumber - 1) * 2
+      const rightTop = 1 + (sheetNumber - 1) * 2
+      const leftBottom = rightTop + 1
+      const rightBottom = leftTop - 1
+      
       return [
-        totalPages,          // 左上: 最終ページ (例: 60)
-        1,                   // 右上: 1ページ目
-        2,                   // 左下: 2ページ目
-        totalPages - 1 > 1 ? totalPages - 1 : 0  // 右下: 最終-1ページ (例: 59)
+        leftTop > 0 && leftTop <= totalPages ? leftTop : 0,
+        rightTop > 0 && rightTop <= totalPages ? rightTop : 0,
+        leftBottom > 0 && leftBottom <= totalPages ? leftBottom : 0,
+        rightBottom > 0 && rightBottom <= totalPages ? rightBottom : 0
+      ]
+    } else {
+      // 右綴じの場合（ページ配置を左右反転）
+      if (sheetNumber === 1) {
+        return [
+          1,                   // 左上: 1ページ目
+          totalPages,          // 右上: 最終ページ (例: 60)
+          totalPages - 1 > 1 ? totalPages - 1 : 0,  // 左下: 最終-1ページ (例: 59)
+          2                    // 右下: 2ページ目
+        ]
+      }
+      
+      // 2枚目以降の計算
+      const leftTop = 1 + (sheetNumber - 1) * 2
+      const rightTop = totalPages - (sheetNumber - 1) * 2
+      const leftBottom = rightTop - 1
+      const rightBottom = leftTop + 1
+      
+      return [
+        leftTop > 0 && leftTop <= totalPages ? leftTop : 0,
+        rightTop > 0 && rightTop <= totalPages ? rightTop : 0,
+        leftBottom > 0 && leftBottom <= totalPages ? leftBottom : 0,
+        rightBottom > 0 && rightBottom <= totalPages ? rightBottom : 0
       ]
     }
-    
-    // 2枚目以降の計算
-    const leftTop = totalPages - (sheetNumber - 1) * 2
-    const rightTop = 1 + (sheetNumber - 1) * 2
-    const leftBottom = rightTop + 1
-    const rightBottom = leftTop - 1
-    
-    // ページ範囲チェック
-    return [
-      leftTop > 0 && leftTop <= totalPages ? leftTop : 0,
-      rightTop > 0 && rightTop <= totalPages ? rightTop : 0,
-      leftBottom > 0 && leftBottom <= totalPages ? leftBottom : 0,
-      rightBottom > 0 && rightBottom <= totalPages ? rightBottom : 0
-    ]
   }
 
   return (

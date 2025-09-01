@@ -1,4 +1,5 @@
 export type PageType = 'blank' | 'grid' | 'ruled'
+export type BindingDirection = 'left' | 'right'
 
 export interface NotebookConfig {
   pageType: PageType
@@ -6,6 +7,7 @@ export interface NotebookConfig {
   showPageNumbers: boolean
   showIndex: boolean
   showCover: boolean
+  bindingDirection: BindingDirection
   gridColor: string
   gridSize: number
   lineColor: string

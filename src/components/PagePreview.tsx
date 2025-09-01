@@ -15,7 +15,9 @@ const PagePreview: React.FC<Props> = ({ config }) => {
   
   const renderPage = (pageNumber: number) => {
     const isEvenPage = pageNumber % 2 === 0
-    const isRightSide = (pageNumber - 1) % 4 >= 2
+    const isRightSide = config.bindingDirection === 'left' 
+      ? (pageNumber - 1) % 4 >= 2
+      : (pageNumber - 1) % 4 < 2
 
     const pageContent = () => {
       if (config.pageType === 'blank') {
@@ -74,7 +76,11 @@ const PagePreview: React.FC<Props> = ({ config }) => {
       <div className="a6-page">
         {pageContent()}
         {config.showPageNumbers && (
-          <div className={`page-number ${isRightSide ? 'right' : 'left'}`}>
+          <div className={`page-number ${
+            config.bindingDirection === 'left'
+              ? (pageNumber % 2 === 0 ? 'left' : 'right')
+              : (pageNumber % 2 === 0 ? 'right' : 'left')
+          }`}>
             {pageNumber}
           </div>
         )}
