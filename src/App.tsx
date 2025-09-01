@@ -52,8 +52,8 @@ const App: React.FC = () => {
       const tempContainer = document.createElement('div')
       tempContainer.style.position = 'absolute'
       tempContainer.style.left = '-9999px'
-      tempContainer.style.width = '794px' // A4幅
-      tempContainer.style.height = '1123px' // A4高さ
+      tempContainer.style.width = '794px' // A4幅 @ 96dpi
+      tempContainer.style.height = '1123px' // A4高さ @ 96dpi
       document.body.appendChild(tempContainer)
       
       for (let sheet = 1; sheet <= sheetsNeeded; sheet++) {
@@ -62,24 +62,26 @@ const App: React.FC = () => {
         
         // 一時的なA4シートを作成
         const a4Sheet = document.createElement('div')
-        a4Sheet.className = 'a4-sheet'
         a4Sheet.style.width = '794px'
         a4Sheet.style.height = '1123px'
         a4Sheet.style.backgroundColor = '#ffffff'
-        a4Sheet.style.display = 'flex'
-        a4Sheet.style.flexWrap = 'wrap'
-        a4Sheet.style.alignContent = 'center'
-        a4Sheet.style.justifyContent = 'center'
+        a4Sheet.style.display = 'grid'
+        a4Sheet.style.gridTemplateColumns = '1fr 1fr'
+        a4Sheet.style.gridTemplateRows = '1fr 1fr'
+        a4Sheet.style.padding = '20px'
+        a4Sheet.style.boxSizing = 'border-box'
+        a4Sheet.style.gap = '8px'
         
         // 4つのA6ページを配置
         pageIndices.forEach((pageNum, index) => {
           const pageDiv = document.createElement('div')
-          pageDiv.style.width = '377px'
-          pageDiv.style.height = '531px'
+          pageDiv.style.width = '100%'
+          pageDiv.style.height = '100%'
           pageDiv.style.border = '1px solid #ddd'
           pageDiv.style.backgroundColor = '#fff'
           pageDiv.style.position = 'relative'
           pageDiv.style.overflow = 'hidden'
+          pageDiv.style.boxSizing = 'border-box'
           
           if (pageNum > 0 && pageNum <= totalPages) {
             // ページ内容を生成
@@ -114,15 +116,16 @@ const App: React.FC = () => {
               pageNumberDiv.textContent = String(pageNum)
               pageNumberDiv.style.position = 'absolute'
               pageNumberDiv.style.bottom = '10px'
-              pageNumberDiv.style.fontSize = '12px'
+              pageNumberDiv.style.fontSize = '14px'
               pageNumberDiv.style.color = '#666'
+              pageNumberDiv.style.fontFamily = 'sans-serif'
               
-              // ページ番号の位置を決定
-              const isRightSide = (pageNum - 1) % 4 >= 2
-              if (isRightSide) {
-                pageNumberDiv.style.right = '10px'
-              } else {
+              // ページ番号の位置を決定（印刷レイアウトに基づく）
+              // 左側のページ（偶数ページ）は左下、右側のページ（奇数ページ）は右下
+              if (pageNum % 2 === 0) {
                 pageNumberDiv.style.left = '10px'
+              } else {
+                pageNumberDiv.style.right = '10px'
               }
               
               pageDiv.appendChild(pageNumberDiv)
