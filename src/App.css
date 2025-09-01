@@ -97,11 +97,47 @@
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
 }
 
-.a6-page {
-  width: 396px;
-  height: 559px;
+.a4-sheet {
+  width: 794px;
+  height: 1123px;
   background: white;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  border: 1px solid #ddd;
+  position: relative;
+  margin: 0 auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.a4-page-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.a6-container {
+  width: 377px;
+  height: 531px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #e0e0e0;
+}
+
+.a6-placeholder {
+  width: 377px;
+  height: 531px;
+  background: #f9f9f9;
+  border: 1px dashed #e0e0e0;
+}
+
+.a6-page {
+  width: 356px;
+  height: 503px;
+  background: white;
   position: relative;
   border: 1px solid #ddd;
 }
@@ -128,15 +164,97 @@
 .page-number {
   position: absolute;
   bottom: 15px;
-  right: 20px;
-  font-size: 12px;
+  font-size: 11px;
   color: #888;
 }
 
+.page-number.left {
+  left: 20px;
+}
+
+.page-number.right {
+  right: 20px;
+}
+
 .preview-info {
-  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding: 1rem;
+  background: #f0f0f0;
+  border-radius: 8px;
+}
+
+.preview-info p {
+  margin: 0.25rem 0;
   color: #666;
   font-size: 0.9em;
+}
+
+.print-instructions {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: #fff9e6;
+  border-radius: 8px;
+  border: 1px solid #ffd666;
+}
+
+.print-instructions h3 {
+  margin-top: 0;
+  color: #d46b08;
+}
+
+.print-instructions ol {
+  margin: 0;
+  padding-left: 1.5rem;
+  color: #666;
+}
+
+.print-instructions li {
+  margin: 0.5rem 0;
+}
+
+@media print {
+  .app-header,
+  .settings-panel,
+  .preview-info,
+  .print-instructions,
+  .export-button {
+    display: none !important;
+  }
+  
+  .app-main {
+    padding: 0;
+  }
+  
+  .preview-panel {
+    padding: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+  
+  .a4-sheet {
+    width: 210mm;
+    height: 297mm;
+    margin: 0;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+    page-break-after: always;
+  }
+  
+  .a6-container {
+    border: none;
+  }
+  
+  .a6-page {
+    width: 105mm;
+    height: 148mm;
+    border: none;
+  }
+  
+  @page {
+    size: A4;
+    margin: 0;
+  }
 }
 
 @media (max-width: 968px) {
@@ -146,5 +264,11 @@
   
   .settings-panel {
     max-width: 100%;
+  }
+  
+  .a4-sheet {
+    transform: scale(0.45);
+    transform-origin: top center;
+    margin-bottom: -600px;
   }
 }
