@@ -33,17 +33,33 @@ const PagePreview: React.FC<Props> = ({ config }) => {
         const offsetX = (pageWidthPx / 2) % gridSizePx
         const offsetY = (pageHeightPx / 2) % gridSizePx
         
+        // SVGパターンで線の種類を表現
+        const strokeDashArray = config.gridStyle === 'dashed' ? '5,3' : config.gridStyle === 'dotted' ? '2,2' : 'none'
+        const svgPattern = `data:image/svg+xml,${encodeURIComponent(`
+          <svg width="${gridSizePx}" height="${gridSizePx}" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="${gridSizePx}" height="${gridSizePx}" patternUnits="userSpaceOnUse">
+                <path d="M ${gridSizePx} 0 L 0 0 0 ${gridSizePx}" 
+                      fill="none" 
+                      stroke="${config.gridColor}" 
+                      stroke-width="${config.gridThickness}"
+                      stroke-dasharray="${strokeDashArray}"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        `)}`
+        
         return (
           <div 
             className="page-content grid"
             style={{
-              backgroundImage: `
-                linear-gradient(${config.gridColor} 1px, transparent 1px),
-                linear-gradient(90deg, ${config.gridColor} 1px, transparent 1px)
-              `,
+              backgroundImage: `url("${svgPattern}")`,
               backgroundSize: `${gridSizePx}px ${gridSizePx}px`,
               backgroundPosition: `${offsetX}px ${offsetY}px`,
               '--grid-size-mm': `${config.gridSize}mm`,
+              '--grid-thickness': `${config.gridThickness}px`,
+              '--grid-style': config.gridStyle,
             } as React.CSSProperties}
           ></div>
         )
@@ -51,19 +67,30 @@ const PagePreview: React.FC<Props> = ({ config }) => {
 
       if (config.pageType === 'ruled') {
         const lineSpacingPx = mmToPx(config.lineSpacing)
+        
+        // SVGパターンで罫線の種類を表現
+        const strokeDashArray = config.lineStyle === 'dashed' ? '8,4' : config.lineStyle === 'dotted' ? '2,3' : 'none'
+        const svgPattern = `data:image/svg+xml,${encodeURIComponent(`
+          <svg width="100%" height="${lineSpacingPx}" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="${lineSpacingPx}" x2="100%" y2="${lineSpacingPx}" 
+                  stroke="${config.lineColor}" 
+                  stroke-width="${config.lineThickness}"
+                  stroke-dasharray="${strokeDashArray}"/>
+          </svg>
+        `)}`
+        
         return (
           <div 
             className="page-content ruled"
             style={{
-              backgroundImage: `repeating-linear-gradient(
-                to bottom,
-                transparent,
-                transparent ${lineSpacingPx - 1}px,
-                ${config.lineColor} ${lineSpacingPx - 1}px,
-                ${config.lineColor} ${lineSpacingPx}px
-              )`,
+              backgroundImage: `url("${svgPattern}")`,
+              backgroundRepeat: 'repeat-y',
+              backgroundSize: `100% ${lineSpacingPx}px`,
+              paddingTop: '40px',
               '--line-spacing-mm': `${config.lineSpacing}mm`,
               '--line-color': config.lineColor,
+              '--line-thickness': `${config.lineThickness}px`,
+              '--line-style': config.lineStyle,
             } as React.CSSProperties}
           ></div>
         )
