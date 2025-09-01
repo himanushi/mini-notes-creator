@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { NotebookConfig } from '../types'
 
 interface Props {
@@ -10,6 +10,8 @@ const PagePreview: React.FC<Props> = ({ config }) => {
   // A6: 105mm × 148mm
   // 画面表示用A6: 377px × 531px (余白なしで隣接)
   const mmToPx = (mm: number) => mm * (377 / 105) // 約3.59
+  
+  const [currentSheet, setCurrentSheet] = useState(1)
   
   const renderPage = (pageNumber: number) => {
     const isEvenPage = pageNumber % 2 === 0
@@ -82,7 +84,6 @@ const PagePreview: React.FC<Props> = ({ config }) => {
 
   const totalPages = config.pageCount
   const sheetsNeeded = Math.ceil(totalPages / 4)
-  const currentSheet = 1
   const startPage = (currentSheet - 1) * 4 + 1
   
   return (
@@ -91,6 +92,25 @@ const PagePreview: React.FC<Props> = ({ config }) => {
       <div className="preview-info">
         <p>A4用紙 {currentSheet} / {sheetsNeeded} 枚目</p>
         <p>ページ {startPage}-{Math.min(startPage + 3, totalPages)} / {totalPages}</p>
+      </div>
+      <div className="sheet-navigation">
+        <button 
+          onClick={() => setCurrentSheet(prev => Math.max(1, prev - 1))}
+          disabled={currentSheet === 1}
+          className="nav-button"
+        >
+          ← 前のページ
+        </button>
+        <span className="sheet-indicator">
+          {currentSheet} / {sheetsNeeded}
+        </span>
+        <button 
+          onClick={() => setCurrentSheet(prev => Math.min(sheetsNeeded, prev + 1))}
+          disabled={currentSheet === sheetsNeeded}
+          className="nav-button"
+        >
+          次のページ →
+        </button>
       </div>
       <div className="a4-sheet">
         <div className="a4-page-grid">
