@@ -1,5 +1,5 @@
 import React from 'react'
-import { NotebookConfig, PageType, BindingDirection } from '../types'
+import { NotebookConfig, PageType, BindingDirection, LineStyle } from '../types'
 
 interface Props {
   config: NotebookConfig
@@ -69,7 +69,7 @@ const NotebookSettings: React.FC<Props> = ({ config, setConfig }) => {
           ページ数:
           <input
             type="number"
-            min="10"
+            min="2"
             max="200"
             value={config.pageCount}
             onChange={(e) => handlePageCountChange(Number(e.target.value))}
@@ -154,6 +154,28 @@ const NotebookSettings: React.FC<Props> = ({ config, setConfig }) => {
               onChange={(e) => setConfig(prev => ({ ...prev, gridColor: e.target.value }))}
             />
           </label>
+          <label>
+            線の太さ (px):
+            <input
+              type="number"
+              min="0.5"
+              max="3"
+              step="0.5"
+              value={config.gridThickness}
+              onChange={(e) => setConfig(prev => ({ ...prev, gridThickness: Number(e.target.value) }))}
+            />
+          </label>
+          <label>
+            線の種類:
+            <select
+              value={config.gridStyle}
+              onChange={(e) => setConfig(prev => ({ ...prev, gridStyle: e.target.value as LineStyle }))}
+            >
+              <option value="solid">実線</option>
+              <option value="dashed">破線</option>
+              <option value="dotted">点線</option>
+            </select>
+          </label>
         </div>
       )}
 
@@ -176,6 +198,28 @@ const NotebookSettings: React.FC<Props> = ({ config, setConfig }) => {
               value={config.lineColor}
               onChange={(e) => setConfig(prev => ({ ...prev, lineColor: e.target.value }))}
             />
+          </label>
+          <label>
+            線の太さ (px):
+            <input
+              type="number"
+              min="0.5"
+              max="3"
+              step="0.5"
+              value={config.lineThickness}
+              onChange={(e) => setConfig(prev => ({ ...prev, lineThickness: Number(e.target.value) }))}
+            />
+          </label>
+          <label>
+            線の種類:
+            <select
+              value={config.lineStyle}
+              onChange={(e) => setConfig(prev => ({ ...prev, lineStyle: e.target.value as LineStyle }))}
+            >
+              <option value="solid">実線</option>
+              <option value="dashed">破線</option>
+              <option value="dotted">点線</option>
+            </select>
           </label>
         </div>
       )}
