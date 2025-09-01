@@ -251,6 +251,21 @@
     border: none;
   }
   
+  /* 方眼・罫線のサイズを印刷時に正確なmmに調整 */
+  .page-content.grid {
+    background-size: var(--grid-size-mm, 5mm) var(--grid-size-mm, 5mm) !important;
+  }
+  
+  .page-content.ruled {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent calc(var(--line-spacing-mm, 7mm) - 0.1mm),
+      var(--line-color, #cccccc) calc(var(--line-spacing-mm, 7mm) - 0.1mm),
+      var(--line-color, #cccccc) var(--line-spacing-mm, 7mm)
+    ) !important;
+  }
+  
   @page {
     size: A4;
     margin: 0;
