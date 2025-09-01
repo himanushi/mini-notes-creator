@@ -161,11 +161,15 @@ const PagePreview: React.FC<Props> = ({ config }) => {
       <div className="print-instructions">
         <h3>印刷手順</h3>
         <ol>
-          <li>A4用紙に印刷（実際のサイズ 100%）</li>
+          <li>A4用紙に両面印刷（実際のサイズ 100%）</li>
           <li>表面: ページ {startPage}, {startPage + 1}, {startPage + 2}, {startPage + 3}</li>
-          <li>裏面印刷時は用紙を短辺で裏返し</li>
-          <li>中央で切って重ねて製本</li>
+          <li><strong>短辺綴じ</strong>で両面印刷（用紙を短辺で裏返し）</li>
+          <li>中央で縦に切断して2枚のA6ページに分割</li>
+          <li>ページ順に重ねて製本</li>
         </ol>
+        <div className="print-note">
+          <p><strong>注意:</strong> プリンターの設定で「短辺綴じ（Short Edge Binding）」を選択してください。長辺綴じだと裏面が逆さまになります。</p>
+        </div>
       </div>
     </div>
   )
