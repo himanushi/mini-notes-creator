@@ -121,22 +121,17 @@
 .a6-container {
   width: 377px;
   height: 531px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px dashed #e0e0e0;
 }
 
 .a6-placeholder {
   width: 377px;
   height: 531px;
   background: #f9f9f9;
-  border: 1px dashed #e0e0e0;
 }
 
 .a6-page {
-  width: 356px;
-  height: 503px;
+  width: 377px;
+  height: 531px;
   background: white;
   position: relative;
   border: 1px solid #ddd;

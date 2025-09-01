@@ -8,8 +8,8 @@ interface Props {
 const PagePreview: React.FC<Props> = ({ config }) => {
   // A4用紙での実際のA6サイズに合わせた変換率
   // A6: 105mm × 148mm
-  // 画面表示用A6: 356px × 503px
-  const mmToPx = (mm: number) => mm * (356 / 105) // 約3.39
+  // 画面表示用A6: 377px × 531px (余白なしで隣接)
+  const mmToPx = (mm: number) => mm * (377 / 105) // 約3.59
   
   const renderPage = (pageNumber: number) => {
     const isEvenPage = pageNumber % 2 === 0
@@ -22,6 +22,13 @@ const PagePreview: React.FC<Props> = ({ config }) => {
 
       if (config.pageType === 'grid') {
         const gridSizePx = mmToPx(config.gridSize)
+        // ページ幅の中心を基準にした方眼の配置
+        const pageWidthPx = 377
+        const pageHeightPx = 531
+        // 中央基準のオフセット計算
+        const offsetX = (pageWidthPx / 2) % gridSizePx
+        const offsetY = (pageHeightPx / 2) % gridSizePx
+        
         return (
           <div 
             className="page-content grid"
@@ -31,6 +38,7 @@ const PagePreview: React.FC<Props> = ({ config }) => {
                 linear-gradient(90deg, ${config.gridColor} 1px, transparent 1px)
               `,
               backgroundSize: `${gridSizePx}px ${gridSizePx}px`,
+              backgroundPosition: `${offsetX}px ${offsetY}px`,
               '--grid-size-mm': `${config.gridSize}mm`,
             } as React.CSSProperties}
           ></div>
