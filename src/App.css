@@ -207,6 +207,20 @@
   margin: 0.5rem 0;
 }
 
+.print-note {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 6px;
+}
+
+.print-note p {
+  margin: 0;
+  color: #856404;
+  font-size: 0.9em;
+}
+
 .sheet-navigation {
   display: flex;
   justify-content: center;
